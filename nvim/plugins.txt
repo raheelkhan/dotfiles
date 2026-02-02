@@ -1,0 +1,36 @@
+# Neovim Plugins (managed by lazy.nvim)
+# These are auto-installed when you open nvim
+
+# Plugin Manager
+https://github.com/folke/lazy.nvim
+
+# Theme
+https://github.com/Mofiqul/vscode.nvim
+
+# File Explorer & Icons
+https://github.com/nvim-tree/nvim-tree.lua
+https://github.com/nvim-tree/nvim-web-devicons
+
+# Tabs (Bufferline)
+https://github.com/akinsho/bufferline.nvim
+
+# Status Line
+https://github.com/nvim-lualine/lualine.nvim
+
+# Fuzzy Finder
+https://github.com/nvim-telescope/telescope.nvim
+https://github.com/nvim-lua/plenary.nvim
+
+# Syntax Highlighting
+https://github.com/nvim-treesitter/nvim-treesitter
+
+# Editing Helpers
+https://github.com/windwp/nvim-autopairs
+https://github.com/numToStr/Comment.nvim
+
+# Git Integration
+https://github.com/lewis6991/gitsigns.nvim
+
+# UI Enhancements
+https://github.com/lukas-reineke/indent-blankline.nvim
+https://github.com/folke/which-key.nvim
