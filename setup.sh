@@ -65,10 +65,17 @@ if [ "$(uname)" = "Darwin" ]; then
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
     fi
     echo ""
+
+    # Install everything from Brewfile (formulae, casks, VSCode extensions)
+    if [ -f "$SCRIPT_DIR/Brewfile" ]; then
+        echo "Installing from Brewfile..."
+        brew bundle --file="$SCRIPT_DIR/Brewfile" --no-lock
+        echo ""
+    fi
 fi
 
 # ------------------------------------------------------------------------------
-# Install core tools
+# Install core tools (non-macOS fallbacks)
 # ------------------------------------------------------------------------------
 echo "Checking core tools..."
 
