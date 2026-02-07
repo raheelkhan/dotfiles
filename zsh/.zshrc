@@ -12,6 +12,7 @@ export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
 export ZSH="$HOME/.oh-my-zsh"
 ZSH_THEME="af-magic"
 COMPLETION_WAITING_DOTS="true"
+DISABLE_AUTO_TITLE="true"
 plugins=(git)
 source "$ZSH/oh-my-zsh.sh"
 
@@ -55,6 +56,7 @@ eval "$(pyenv init - zsh)"
 export PATH="$HOME/.rbenv/bin:$PATH"
 eval "$(rbenv init -)"
 # rbenv auto-switches via .ruby-version by default
+
 
 # ==============================================================================
 # IMPORT SECRETS
