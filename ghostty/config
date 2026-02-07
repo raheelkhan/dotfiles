@@ -17,3 +17,10 @@ shell-integration-features = no-cursor
 # Window: tabs in titlebar, dark theme
 macos-titlebar-style = tabs
 window-theme = dark
+
+# Disable splits (use tabs instead, like iTerm2)
+keybind = cmd+d=unbind
+keybind = cmd+shift+d=unbind
+
+
+
