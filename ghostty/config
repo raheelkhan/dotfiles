@@ -12,7 +12,7 @@ font-feature = dlig
 
 # Cursor: block in shell, Neovim controls its own (block normal, line insert)
 cursor-style = block
-shell-integration-features = no-cursor
+shell-integration-features = no-cursor,no-title
 
 # Window: tabs in titlebar, dark theme
 macos-titlebar-style = tabs

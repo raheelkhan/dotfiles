@@ -57,6 +57,11 @@ export PATH="$HOME/.rbenv/bin:$PATH"
 eval "$(rbenv init -)"
 # rbenv auto-switches via .ruby-version by default
 
+# ==============================================================================
+# TERMINAL TITLE
+# ==============================================================================
+# Show current directory name as tab title (e.g., "dotfiles" not "~/Code/dotfiles")
+precmd() { echo -ne "\e]0;${(U)PWD##*/}\a"; }
 
 # ==============================================================================
 # IMPORT SECRETS
