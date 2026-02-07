@@ -111,7 +111,7 @@ Leader key: `Space`
 | Action | Keybinding |
 |--------|------------|
 | Toggle terminal | `Ctrl+\`` or `Space t` |
-| Exit terminal mode | `Esc` |
+| Exit terminal mode | `Esc Esc` |
 | Enter terminal insert mode | `i` |
 
 ## Vim Essentials (built-in)

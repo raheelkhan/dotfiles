@@ -186,6 +186,7 @@ echo ""
 create_symlink "$SCRIPT_DIR/nvim" "$HOME/.config/nvim" "nvim"
 create_symlink "$SCRIPT_DIR/zsh/.zshrc" "$HOME/.zshrc" "zshrc"
 create_symlink "$SCRIPT_DIR/aerospace/aerospace.toml" "$HOME/.aerospace.toml" "aerospace"
+create_symlink "$SCRIPT_DIR/ghostty/config" "$HOME/Library/Application Support/com.mitchellh.ghostty/config" "ghostty"
 
 if [ "$(uname)" = "Darwin" ]; then
     create_symlink "$SCRIPT_DIR/vscode/settings.json" "$HOME/Library/Application Support/Code/User/settings.json" "vscode"
