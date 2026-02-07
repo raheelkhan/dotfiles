@@ -75,6 +75,17 @@ if [ "$(uname)" = "Darwin" ]; then
 fi
 
 # ------------------------------------------------------------------------------
+# Install Oh My Zsh
+# ------------------------------------------------------------------------------
+if [ -d "$HOME/.oh-my-zsh" ]; then
+    echo "[oh-my-zsh] OK"
+else
+    echo "[oh-my-zsh] Installing..."
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+fi
+echo ""
+
+# ------------------------------------------------------------------------------
 # Install core tools (non-macOS fallbacks)
 # ------------------------------------------------------------------------------
 echo "Checking core tools..."
