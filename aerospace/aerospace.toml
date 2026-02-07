@@ -3,7 +3,12 @@
 
 # You can use it to add commands that run after AeroSpace startup.
 # Available commands : https://nikitabobko.github.io/AeroSpace/commands
-after-startup-command = []
+after-startup-command = [
+    'exec-and-forget open -a Ghostty',
+    'exec-and-forget open -a "Google Chrome"',
+    'exec-and-forget open -a Slack',
+    'exec-and-forget open -a Mattermost',
+]
 
 # Start AeroSpace at login
 start-at-login = true
@@ -174,7 +179,7 @@ automatically-unhide-macos-hidden-apps = false
     9 = 'HP*'
 # App to workspace assignments
 [[on-window-detected]]
-    if.app-id = 'com.googlecode.iterm2'
+    if.app-id = 'com.mitchellh.ghostty'
     run = 'move-node-to-workspace 1'
 [[on-window-detected]]
     if.app-id = 'com.google.Chrome'
@@ -182,6 +187,9 @@ automatically-unhide-macos-hidden-apps = false
 [[on-window-detected]]
     if.app-id = 'com.tinyspeck.slackmacgap'
     run = 'move-node-to-workspace 3'
+[[on-window-detected]]
+    if.app-id = 'Mattermost.Desktop'
+    run = 'move-node-to-workspace 4'
 # Floating utility apps (won't tile)
 [[on-window-detected]]
     if.app-id = 'com.apple.finder'

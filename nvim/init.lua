@@ -35,6 +35,9 @@ vim.opt.clipboard:append("unnamed")
 vim.opt.undofile = true
 vim.opt.wrap = false
 
+-- Terminal sync for Neovim 0.10+
+vim.opt.termsync = true
+
 -- ===========================
 -- FORMAT ON SAVE
 -- ===========================
@@ -325,8 +328,9 @@ require("lazy").setup({
         size = 15,
         open_mapping = [[<C-`>]],
         direction = "horizontal",
-        shade_terminals = true,
+        shade_terminals = false,  -- Disable shading to reduce flickering
         start_in_insert = true,
+        persist_mode = false,     -- Don't persist insert/normal mode
       })
 
       -- Space+t to toggle terminal
@@ -520,5 +524,5 @@ keymap("n", "<leader>cc", ":cclose<CR>", { desc = "Close quickfix" })
 -- ===========================
 -- TERMINAL
 -- ===========================
-keymap("t", "<Esc>", [[<C-\><C-n>]], { desc = "Exit terminal mode" })
+keymap("t", "<Esc><Esc>", [[<C-\><C-n>]], { desc = "Exit terminal mode" })
 
