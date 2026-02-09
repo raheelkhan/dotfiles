@@ -34,6 +34,7 @@ vim.opt.clipboard = "unnamedplus"
 vim.opt.clipboard:append("unnamed")
 vim.opt.undofile = true
 vim.opt.wrap = false
+vim.opt.laststatus = 3  -- Global statusline (no per-window status bars)
 
 -- Terminal sync for Neovim 0.10+
 vim.opt.termsync = true
@@ -43,7 +44,7 @@ vim.opt.termsync = true
 -- ===========================
 vim.api.nvim_create_autocmd("BufWritePre", {
   callback = function()
-    vim.lsp.buf.format({ async = false })
+    require("conform").format({ async = false, lsp_fallback = true, timeout_ms = 3000 })
   end,
 })
 
@@ -57,16 +58,20 @@ vim.api.nvim_create_user_command("Q", function()
 
   local current = vim.fn.bufnr("%")
 
+  -- Warn if unsaved changes
+  if vim.bo[current].modified then
+    local choice = vim.fn.confirm("Unsaved changes. Close without saving?", "&Yes\n&No", 2)
+    if choice ~= 1 then return end
+  end
+
   -- Switch to next buffer first, then delete current
   vim.cmd("bnext")
 
-  -- If we're still on the same buffer (only one buffer), create empty
   if vim.fn.bufnr("%") == current then
     vim.cmd("enew")
   end
 
-  -- Now delete the original buffer
-  vim.cmd("bdelete " .. current)
+  vim.cmd("bdelete! " .. current)
 end, {})
 
 -- ===========================
@@ -273,7 +278,8 @@ require("lazy").setup({
         ensure_installed = {
           -- Add/remove servers here as needed:
           "ts_ls",          -- TypeScript/JavaScript
-          "pyright",        -- Python
+          "pyright",        -- Python (type checking)
+          "ruff",           -- Python (formatting + linting)
           -- ruby_lsp: installed via rbenv gem, configured below (not Mason)
           "bashls",         -- Bash
           "jsonls",         -- JSON
@@ -282,17 +288,24 @@ require("lazy").setup({
         },
         automatic_installation = true,
         handlers = {
-          -- Default: auto-setup all servers
+          -- Default: auto-setup all servers with completion capabilities
           function(server_name)
-            require("lspconfig")[server_name].setup({})
+            local caps = {}
+            local ok, cmp_lsp = pcall(require, "cmp_nvim_lsp")
+            if ok then caps = cmp_lsp.default_capabilities() end
+            require("lspconfig")[server_name].setup({ capabilities = caps })
           end,
           -- Custom: lua_ls needs to know about vim global
           ["lua_ls"] = function()
+            local caps = {}
+            local ok, cmp_lsp = pcall(require, "cmp_nvim_lsp")
+            if ok then caps = cmp_lsp.default_capabilities() end
             require("lspconfig").lua_ls.setup({
+              capabilities = caps,
               settings = { Lua = { diagnostics = { globals = { "vim" } } } },
             })
           end,
-          },
+        },
       })
 
       -- Ruby LSP: Use rbenv shim (not Mason) so it respects .ruby-version
@@ -306,6 +319,110 @@ require("lazy").setup({
     end,
   },
   { "neovim/nvim-lspconfig" },
+
+  -- Formatter (Prettier for web languages, LSP fallback for the rest)
+  {
+    "stevearc/conform.nvim",
+    dependencies = { "williamboman/mason.nvim" },
+    config = function()
+      pcall(function()
+        local mr = require("mason-registry")
+        if not mr.is_installed("prettierd") then
+          mr.get_package("prettierd"):install()
+        end
+      end)
+
+      require("conform").setup({
+        formatters_by_ft = {
+          javascript = { "prettierd" },
+          typescript = { "prettierd" },
+          javascriptreact = { "prettierd" },
+          typescriptreact = { "prettierd" },
+          json = { "prettierd" },
+          html = { "prettierd" },
+          css = { "prettierd" },
+          markdown = { "prettierd" },
+          yaml = { "prettierd" },
+        },
+      })
+    end,
+  },
+
+  -- Code completion (VSCode-like intellisense popups)
+  {
+    "hrsh7th/nvim-cmp",
+    dependencies = {
+      "hrsh7th/cmp-nvim-lsp",   -- LSP completions
+      "hrsh7th/cmp-buffer",     -- Buffer word completions
+      "hrsh7th/cmp-path",       -- File path completions
+      "L3MON4D3/LuaSnip",      -- Snippet engine
+      "saadparwaiz1/cmp_luasnip", -- Snippet completions
+      "onsails/lspkind.nvim",   -- VSCode-like icons
+    },
+    config = function()
+      local cmp = require("cmp")
+      local luasnip = require("luasnip")
+
+      local lspkind = require("lspkind")
+
+      cmp.setup({
+        snippet = {
+          expand = function(args)
+            luasnip.lsp_expand(args.body)
+          end,
+        },
+        window = {
+          completion = {
+            border = "rounded",
+            winhighlight = "Normal:NormalFloat,FloatBorder:FloatBorder,CursorLine:PmenuSel,Search:None",
+          },
+          documentation = {
+            border = "rounded",
+            winhighlight = "Normal:NormalFloat,FloatBorder:FloatBorder,CursorLine:PmenuSel,Search:None",
+          },
+        },
+        formatting = {
+          format = lspkind.cmp_format({
+            mode = "symbol_text",  -- Icon + text (e.g. " Method")
+            maxwidth = 50,
+          }),
+        },
+        mapping = cmp.mapping.preset.insert({
+          ["<C-Space>"] = cmp.mapping.complete(),        -- Trigger completion
+          ["<CR>"] = cmp.mapping.confirm({ select = true }), -- Accept selection
+          ["<Tab>"] = cmp.mapping(function(fallback)      -- Tab to cycle
+            if cmp.visible() then
+              cmp.select_next_item()
+            elseif luasnip.expand_or_jumpable() then
+              luasnip.expand_or_jump()
+            else
+              fallback()
+            end
+          end, { "i", "s" }),
+          ["<S-Tab>"] = cmp.mapping(function(fallback)    -- Shift-Tab reverse
+            if cmp.visible() then
+              cmp.select_prev_item()
+            elseif luasnip.jumpable(-1) then
+              luasnip.jump(-1)
+            else
+              fallback()
+            end
+          end, { "i", "s" }),
+          ["<C-d>"] = cmp.mapping.scroll_docs(4),         -- Scroll docs down
+          ["<C-u>"] = cmp.mapping.scroll_docs(-4),        -- Scroll docs up
+          ["<Esc>"] = cmp.mapping.abort(),                 -- Dismiss popup
+        }),
+        sources = cmp.config.sources({
+          { name = "nvim_lsp" },  -- LSP suggestions (highest priority)
+          { name = "luasnip" },   -- Snippets
+        }, {
+          { name = "buffer" },    -- Words from current file (fallback)
+          { name = "path" },      -- File paths (fallback)
+        }),
+      })
+
+    end,
+  },
 
   -- Auto pairs
   {
@@ -328,9 +445,10 @@ require("lazy").setup({
         size = 15,
         open_mapping = [[<C-`>]],
         direction = "horizontal",
-        shade_terminals = false,  -- Disable shading to reduce flickering
+        shade_terminals = false,
         start_in_insert = true,
-        persist_mode = false,     -- Don't persist insert/normal mode
+        persist_mode = false,
+        persist_size = true,
       })
 
       -- Space+t to toggle terminal
@@ -434,6 +552,7 @@ end
 keymap("n", "<leader>w", ":w<CR>", { desc = "Save file" })
 keymap("n", "<leader>W", ":wa<CR>", { desc = "Save all files" })
 keymap("n", "<leader>q", ":Q<CR>", { desc = "Close buffer (smart quit)" })
+keymap("n", "<leader>wq", ":w<CR>:Q<CR>", { desc = "Save and close buffer" })
 keymap("n", "<leader>Q", ":qa<CR>", { desc = "Quit all" })
 keymap("n", "<leader>n", ":enew<CR>", { desc = "New file" })
 
@@ -504,15 +623,18 @@ keymap("n", "[g", ":Gitsigns prev_hunk<CR>", { desc = "Previous git hunk" })
 -- ===========================
 -- LSP
 -- ===========================
+-- Bordered diagnostic floats
+vim.diagnostic.config({ float = { border = "rounded" } })
+
 keymap("n", "gd", vim.lsp.buf.definition, { desc = "Go to definition" })
 keymap("n", "gr", vim.lsp.buf.references, { desc = "Find references" })
-keymap("n", "K", vim.lsp.buf.hover, { desc = "Hover info" })
+keymap("n", "K", function() vim.lsp.buf.hover({ border = "rounded" }) end, { desc = "Hover info" })
 keymap("n", "<leader>rn", vim.lsp.buf.rename, { desc = "Rename symbol" })
 keymap("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "Code action" })
 keymap("n", "[d", vim.diagnostic.goto_prev, { desc = "Previous diagnostic" })
 keymap("n", "]d", vim.diagnostic.goto_next, { desc = "Next diagnostic" })
-keymap("n", "<leader>d", vim.diagnostic.open_float, { desc = "Show diagnostic" })
-keymap("i", "<C-k>", vim.lsp.buf.signature_help, { desc = "Signature help" })
+keymap("n", "<leader>d", function() vim.diagnostic.open_float({ border = "rounded" }) end, { desc = "Show diagnostic" })
+keymap("i", "<C-k>", function() vim.lsp.buf.signature_help({ border = "rounded" }) end, { desc = "Signature help" })
 
 -- ===========================
 -- QUICKFIX
