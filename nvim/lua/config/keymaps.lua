@@ -15,12 +15,6 @@ pcall(vim.keymap.del, "n", "<leader>w|")
 pcall(vim.keymap.del, "n", "<leader>wm")
 
 -- ===========================
--- FILE EXPLORER (neo-tree)
--- ===========================
--- <leader>e is already toggle explorer in LazyVim
-map("n", "<leader>o", "<cmd>Neotree focus<cr>", { desc = "Focus explorer", silent = true })
-
--- ===========================
 -- FIND (Telescope)
 -- ===========================
 -- <leader>ff and <leader>fb and <leader>fr already work in LazyVim
