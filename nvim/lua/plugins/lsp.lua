@@ -1,7 +1,7 @@
 return {
   -- Mason: ensure extra tools are installed
   {
-    "williamboman/mason.nvim",
+    "mason-org/mason.nvim",
     opts = {
       ensure_installed = {
         "prettierd",
