@@ -1,4 +1,18 @@
 return {
+  -- Snacks: floating terminal (default changed to bottom in newer versions)
+  {
+    "folke/snacks.nvim",
+    opts = {
+      terminal = {
+        shell = "tmux new-session -A -s nvim",
+        win = {
+          position = "float",
+          border = "rounded",
+        },
+      },
+    },
+  },
+
   -- Bufferline customization
   {
     "akinsho/bufferline.nvim",
