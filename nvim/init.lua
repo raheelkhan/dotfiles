@@ -117,6 +117,9 @@ require("lazy").setup({
       vim.g.loaded_netrwPlugin = 1
 
       require("nvim-tree").setup({
+        hijack_directories = {
+          enable = false,  -- We handle startup layout with VimEnter autocmd
+        },
         view = {
           width = 35,
           side = "left",
@@ -146,7 +149,25 @@ require("lazy").setup({
           open_file = {
             quit_on_open = false,
             window_picker = {
-              enable = false,  -- Open in the last focused window
+              enable = true,
+              picker = function()
+                -- Always open in the editor window, never in terminal or tree
+                local current = vim.api.nvim_get_current_win()
+                for _, win in ipairs(vim.api.nvim_list_wins()) do
+                  if win ~= current then
+                    local cfg = vim.api.nvim_win_get_config(win)
+                    if cfg.relative == "" then
+                      local buf = vim.api.nvim_win_get_buf(win)
+                      if vim.bo[buf].buftype ~= "terminal" and vim.bo[buf].filetype ~= "NvimTree" then
+                        return win
+                      end
+                    end
+                  end
+                end
+                -- No editor window found, create one
+                vim.cmd("vsplit")
+                return vim.api.nvim_get_current_win()
+              end,
             },
           },
         },
@@ -503,6 +524,30 @@ require("lazy").setup({
 
 })
 
+
+-- ===========================
+-- STARTUP LAYOUT (VSCode-like: sidebar + editor)
+-- ===========================
+vim.api.nvim_create_autocmd("VimEnter", {
+  callback = function(data)
+    -- Skip special buffers (e.g. git commit messages)
+    if vim.bo[data.buf].buftype ~= "" then return end
+
+    local is_directory = vim.fn.isdirectory(data.file) == 1
+
+    if is_directory then
+      vim.cmd.cd(data.file)
+      local dir_buf = data.buf
+      vim.cmd("enew")
+      pcall(vim.api.nvim_buf_delete, dir_buf, { force = true })
+    end
+
+    -- Open NvimTree as left sidebar
+    require("nvim-tree.api").tree.open()
+    -- Focus the editor window (right of tree)
+    vim.cmd("wincmd l")
+  end,
+})
 
 -- ===========================
 -- KEYMAPS (Cross-platform)
