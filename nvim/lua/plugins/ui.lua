@@ -21,6 +21,9 @@ return {
         show_buffer_close_icons = true,
         show_close_icon = false,
       },
+      highlights = {
+        buffer_selected = { italic = false },
+      },
     },
   },
 
