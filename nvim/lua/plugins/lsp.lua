@@ -10,6 +10,18 @@ return {
     },
   },
 
+  -- Disable venv-selector (replaced by venv-lsp for auto-detection)
+  { "linux-cultist/venv-selector.nvim", enabled = false },
+
+  -- Auto-detect pyenv virtualenvs for Python LSP
+  {
+    "jglasovic/venv-lsp.nvim",
+    event = "BufReadPre",
+    config = function()
+      require("venv-lsp").setup()
+    end,
+  },
+
   -- LSP: add bashls, configure ruby_lsp via rbenv
   {
     "neovim/nvim-lspconfig",
