@@ -1,4 +1,14 @@
 return {
+  -- Disable markdownlint diagnostics (MD032, MD013, etc.)
+  {
+    "mfussenegger/nvim-lint",
+    opts = {
+      linters_by_ft = {
+        markdown = {},
+      },
+    },
+  },
+
   -- Telescope customization
   {
     "nvim-telescope/telescope.nvim",

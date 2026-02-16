@@ -12,3 +12,4 @@ vim.opt.clipboard:append("unnamed")
 vim.opt.laststatus = 3
 vim.opt.undofile = true
 vim.g.autoformat = false
+vim.opt.spell = false
