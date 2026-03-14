@@ -28,6 +28,17 @@ return {
     opts = {
       servers = {
         bashls = {},
+        jsonls = {
+          -- Disable schema validation to avoid false positives on custom JSON files
+          before_init = function(_, new_config)
+            new_config.settings.json.schemas = {}
+          end,
+          settings = {
+            json = {
+              validate = { enable = false },
+            },
+          },
+        },
       },
     },
     init = function()
