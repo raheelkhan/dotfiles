@@ -64,6 +64,41 @@ eval "$(rbenv init -)"
 precmd() { echo -ne "\e]0;${(U)PWD##*/}\a"; }
 
 # ==============================================================================
+# TMUX PROJECT SESSIONS
+# ==============================================================================
+# Usage: dev <project-name> — creates/attaches a tmux session with 3 windows
+dev() {
+  local project="$1"
+  local dir="$HOME/Code/$project"
+
+  if [ -z "$project" ]; then
+    echo "Usage: dev <project-name>"
+    ls ~/Code/
+    return 1
+  fi
+
+  if [ ! -d "$dir" ]; then
+    echo "No project found at $dir"
+    return 1
+  fi
+
+  # If session exists, just attach
+  if tmux has-session -t "$project" 2>/dev/null; then
+    tmux attach-session -t "$project"
+    return
+  fi
+
+  # Create new session with 3 windows
+  tmux new-session -d -s "$project" -c "$dir" -n editor
+  tmux send-keys -t "$project:editor" "nvim ." Enter
+  tmux new-window -t "$project" -c "$dir" -n terminal
+  tmux new-window -t "$project" -c "$dir" -n claude
+  tmux send-keys -t "$project:claude" "claude" Enter
+  tmux select-window -t "$project:editor"
+  tmux attach-session -t "$project"
+}
+
+# ==============================================================================
 # IMPORT SECRETS
 # ==============================================================================
 [[ -f "$HOME/.zshrc.local" ]] && source "$HOME/.zshrc.local"
