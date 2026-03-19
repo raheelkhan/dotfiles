@@ -196,6 +196,17 @@ fi
 echo ""
 
 # ------------------------------------------------------------------------------
+# macOS defaults
+# ------------------------------------------------------------------------------
+if [ "$(uname)" = "Darwin" ]; then
+    echo "Setting macOS defaults..."
+    defaults write NSGlobalDomain KeyRepeat -int 1
+    defaults write NSGlobalDomain InitialKeyRepeat -int 10
+    echo "[keyboard] Fast key repeat enabled"
+    echo ""
+fi
+
+# ------------------------------------------------------------------------------
 # Create symlinks
 # ------------------------------------------------------------------------------
 echo "Creating symlinks..."
