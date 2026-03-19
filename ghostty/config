@@ -2,7 +2,11 @@
 # Ghostty Terminal Config
 # ==========================
 
-# Font: Fira Code with ligatures
+# Appearance
+theme = Dark+
+cursor-style-blink = true
+
+# Font
 font-family = FiraCode Nerd Font
 font-style = Medium
 font-size = 16
@@ -10,11 +14,11 @@ font-feature = calt
 font-feature = liga
 font-feature = dlig
 
-# Cursor: block in shell, Neovim controls its own (block normal, line insert)
+# Cursor
 cursor-style = block
 shell-integration-features = no-cursor,no-title
 
-# Window: tabs in titlebar, dark theme
+# Window
 macos-titlebar-style = tabs
 window-theme = dark
 
