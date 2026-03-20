@@ -46,11 +46,9 @@ load-nvmrc() {
 add-zsh-hook chpwd load-nvmrc
 load-nvmrc  # Run on shell start
 
-# Python (pyenv) with auto-switch on .python-version
-export PYENV_ROOT="$HOME/.pyenv"
-[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init - zsh)"
-# pyenv auto-switches via .python-version by default
+# Python (uv) — manages versions + packages
+# uv reads .python-version automatically
+# Use: uv python install 3.12, uv run python, uv sync
 
 # Ruby (rbenv) with auto-switch on .ruby-version
 export PATH="$HOME/.rbenv/bin:$PATH"
@@ -63,39 +61,51 @@ eval "$(rbenv init -)"
 # Show current directory name as tab title (e.g., "dotfiles" not "~/Code/dotfiles")
 precmd() { echo -ne "\e]0;${(U)PWD##*/}\a"; }
 
+
 # ==============================================================================
 # TMUX PROJECT SESSIONS
 # ==============================================================================
-# Usage: dev <project-name> — creates/attaches a tmux session with 3 windows
 dev() {
   local project="$1"
   local dir="$HOME/Code/$project"
 
   if [ -z "$project" ]; then
-    echo "Usage: dev <project-name>"
+    echo "Usage: dev <project>"
     ls ~/Code/
     return 1
   fi
 
   if [ ! -d "$dir" ]; then
-    echo "No project found at $dir"
+    echo "No project at $dir"
     return 1
   fi
 
-  # If session exists, just attach
+  # Attach if session already exists
   if tmux has-session -t "$project" 2>/dev/null; then
-    tmux attach-session -t "$project"
+    if [ -n "$TMUX" ]; then
+      tmux switch-client -t "$project"
+    else
+      tmux attach-session -t "$project"
+    fi
     return
   fi
 
-  # Create new session with 3 windows
+  # Create session with first window (editor)
   tmux new-session -d -s "$project" -c "$dir" -n editor
-  tmux send-keys -t "$project:editor" "nvim ." Enter
+  tmux send-keys -t "$project":editor "nvim ." Enter
+
+  # Add terminal window
   tmux new-window -t "$project" -c "$dir" -n terminal
-  tmux new-window -t "$project" -c "$dir" -n claude
-  tmux send-keys -t "$project:claude" "claude" Enter
-  tmux select-window -t "$project:editor"
-  tmux attach-session -t "$project"
+
+  # Focus editor window
+  tmux select-window -t "$project":editor
+
+  # Attach
+  if [ -n "$TMUX" ]; then
+    tmux switch-client -t "$project"
+  else
+    tmux attach-session -t "$project"
+  fi
 }
 
 # ==============================================================================
