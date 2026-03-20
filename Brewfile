@@ -8,7 +8,6 @@ brew "libpq", link: true
 brew "neovim"
 brew "uv"
 brew "fzf"
-brew "sesh"
 brew "zoxide"
 brew "rbenv"
 brew "tree"
