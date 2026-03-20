@@ -80,7 +80,6 @@ dev() {
     return 1
   fi
 
-  # Attach if session already exists
   if tmux has-session -t "$project" 2>/dev/null; then
     if [ -n "$TMUX" ]; then
       tmux switch-client -t "$project"
@@ -90,17 +89,11 @@ dev() {
     return
   fi
 
-  # Create session with first window (editor)
   tmux new-session -d -s "$project" -c "$dir" -n editor
   tmux send-keys -t "$project":editor "nvim ." Enter
-
-  # Add terminal window
   tmux new-window -t "$project" -c "$dir" -n terminal
-
-  # Focus editor window
   tmux select-window -t "$project":editor
 
-  # Attach
   if [ -n "$TMUX" ]; then
     tmux switch-client -t "$project"
   else
