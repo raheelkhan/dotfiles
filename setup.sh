@@ -222,6 +222,7 @@ create_symlink "$SCRIPT_DIR/aerospace/aerospace.toml" "$HOME/.aerospace.toml" "a
 create_symlink "$SCRIPT_DIR/ghostty/config" "$HOME/Library/Application Support/com.mitchellh.ghostty/config" "ghostty"
 create_symlink "$SCRIPT_DIR/tmux/tmux.conf" "$HOME/.tmux.conf" "tmux"
 create_symlink "$SCRIPT_DIR/claude/settings.json" "$HOME/.claude/settings.json" "claude"
+create_symlink "$SCRIPT_DIR/sesh" "$HOME/.config/sesh" "sesh"
 
 echo ""
 
