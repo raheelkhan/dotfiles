@@ -103,4 +103,7 @@ map("i", "<C-k>", function() vim.lsp.buf.signature_help({ border = "rounded" }) 
 -- ]q / [q — already provided by LazyVim
 map("n", "<leader>cc", "<cmd>cclose<cr>", { desc = "Close quickfix", silent = true })
 
--- Terminal: LazyVim defaults only
+-- ===========================
+-- TERMINAL
+-- ===========================
+map("t", "<Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode", silent = true })

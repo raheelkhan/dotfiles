@@ -66,7 +66,7 @@ if [ "$(uname)" = "Darwin" ]; then
     fi
     echo ""
 
-    # Install everything from Brewfile (formulae, casks, VSCode extensions)
+    # Install everything from Brewfile (formulae, casks)
     if [ -f "$SCRIPT_DIR/Brewfile" ]; then
         echo "Installing from Brewfile..."
         brew bundle --file="$SCRIPT_DIR/Brewfile" --no-lock
@@ -113,15 +113,15 @@ else
     echo "DONE"
 fi
 
-# Python (via pyenv)
-if check_command pyenv; then
-    echo "[pyenv] OK"
+# Python (via uv)
+if check_command uv; then
+    echo "[uv] OK"
 else
-    echo -n "[pyenv] Installing... "
+    echo -n "[uv] Installing... "
     if [ "$(uname)" = "Darwin" ]; then
-        brew install pyenv
+        brew install uv
     else
-        curl https://pyenv.run | bash
+        curl -LsSf https://astral.sh/uv/install.sh | sh
     fi
     echo "DONE"
 fi
@@ -138,20 +138,6 @@ else
         git clone https://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build
     fi
     echo "DONE"
-fi
-
-# Install ruby-lsp for all installed Ruby versions (for neovim LSP)
-if check_command rbenv; then
-    echo "Installing ruby-lsp for all Ruby versions..."
-    for version in $(rbenv versions --bare 2>/dev/null); do
-        if RBENV_VERSION="$version" gem list ruby-lsp -i &>/dev/null; then
-            echo "[ruby-lsp@$version] OK"
-        else
-            echo -n "[ruby-lsp@$version] Installing... "
-            RBENV_VERSION="$version" gem install ruby-lsp --silent
-            echo "DONE"
-        fi
-    done
 fi
 
 # Go
@@ -193,6 +179,24 @@ else
     echo "DONE"
 fi
 
+# Tmux Plugin Manager (TPM)
+if [ -d "$HOME/.tmux/plugins/tpm" ]; then
+    echo "[tpm] OK"
+else
+    echo -n "[tpm] Installing... "
+    git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+    echo "DONE"
+fi
+
+# Claude Code CLI
+if check_command claude; then
+    echo "[claude-code] OK"
+else
+    echo -n "[claude-code] Installing... "
+    curl -fsSL https://claude.ai/install.sh | sh
+    echo "DONE"
+fi
+
 echo ""
 
 # ------------------------------------------------------------------------------
@@ -217,12 +221,7 @@ create_symlink "$SCRIPT_DIR/zsh/.zshrc" "$HOME/.zshrc" "zshrc"
 create_symlink "$SCRIPT_DIR/aerospace/aerospace.toml" "$HOME/.aerospace.toml" "aerospace"
 create_symlink "$SCRIPT_DIR/ghostty/config" "$HOME/Library/Application Support/com.mitchellh.ghostty/config" "ghostty"
 create_symlink "$SCRIPT_DIR/tmux/tmux.conf" "$HOME/.tmux.conf" "tmux"
-
-if [ "$(uname)" = "Darwin" ]; then
-    create_symlink "$SCRIPT_DIR/vscode/settings.json" "$HOME/Library/Application Support/Code/User/settings.json" "vscode"
-else
-    create_symlink "$SCRIPT_DIR/vscode/settings.json" "$HOME/.config/Code/User/settings.json" "vscode"
-fi
+create_symlink "$SCRIPT_DIR/claude/settings.json" "$HOME/.claude/settings.json" "claude"
 
 echo ""
 
