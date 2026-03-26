@@ -24,6 +24,8 @@ require("lazy").setup({
     { import = "lazyvim.plugins.extras.lang.json" },
     { import = "lazyvim.plugins.extras.lang.yaml" },
     { import = "lazyvim.plugins.extras.lang.markdown" },
+    -- AI
+    { import = "lazyvim.plugins.extras.ai.claudecode" },
     -- Our overrides
     { import = "plugins" },
   },
