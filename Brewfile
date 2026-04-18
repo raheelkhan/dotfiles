@@ -4,6 +4,7 @@ brew "act"
 brew "tmux"
 brew "gh"
 brew "just"
+brew "lazygit"
 brew "libpq", link: true
 brew "fd"
 brew "neovim"
