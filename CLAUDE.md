@@ -71,67 +71,15 @@ nvim/
 
 ## Neovim Keymaps
 
-### Files & Buffers
-- `Space w` — Save file
-- `Space W` — Save all files
-- `Space q` — Close buffer
-- `Space wq` — Save and close buffer
-- `Space Q` — Quit all
-- `Space n` — New file
-- `Tab` / `Shift+Tab` — Next/prev buffer
-- `Space 1-9` — Jump to buffer by number
-- `Space X` — Force close buffer
+Using LazyVim defaults — see https://www.lazyvim.org/keymaps for the full list.
 
-### Find (Telescope)
-- `Space f f` — Find files
-- `Space f g` — Find in files (grep)
-- `Space f w` — Find word under cursor
-- `Space f b` — Find buffers
-- `Space f r` — Recent files
-- `Space f h` — Find help
+Discover keymaps live:
+- Wait ~300ms after pressing `Space` → which-key popup shows every `<leader>` prefix
+- `Space s k` — Telescope keymaps picker (searchable list of every keymap)
+- `:verbose map <key>` — show where a specific key was defined
 
-### Editing
-- `U` — Redo
-- `Alt+j/k` — Move line down/up
-- `Alt+Shift+j/k` — Duplicate line down/up
-- `Space /` — Toggle comment
-- `Space a` — Select all
-- `Space sr` — Search and replace
-
-### Windows
-- `Space sv` — Vertical split
-- `Space sh` — Horizontal split
-- `Space sc` — Close split
-- `Space so` — Close other splits
-- `Ctrl+h/j/k/l` — Navigate between splits
-
-### LSP
-- `gd` — Go to definition
-- `gr` — Find references
-- `K` — Hover info
-- `Space c a` — Code action
-- `Space c f` — Format file (manual)
-- `Space r n` — Rename symbol
-- `Space d` — Show diagnostic
-- `Ctrl+k` — Signature help (insert mode)
-
-### Git (Gitsigns)
-- `Space g b` — Blame line
-- `Space g p` — Preview hunk
-- `Space g r` — Reset hunk
-- `]g` / `[g` — Next/prev git hunk
-
-### Claude Code (inside Neovim)
-- `Space a c` — Toggle Claude Code terminal
-- `Space a f` — Focus Claude Code
-- `Space a r` — Resume previous conversation
-- `Space a C` — Accept diff
-- `Space a D` — Reject diff
-- `Space a s` — Send visual selection to Claude (visual mode)
-- `Space a b` — Add current buffer to Claude context
-
-### Terminal
-- `Esc` — Exit terminal mode to Neovim normal mode
+### Custom (not LazyVim default)
+- `Esc` in terminal mode — exit back to normal mode (required so `Esc` in the Claude Code terminal returns to Neovim instead of being captured by Claude's TUI)
 
 ## AeroSpace Window Management
 - `Alt+h/j/k/l` — Focus left/down/up/right

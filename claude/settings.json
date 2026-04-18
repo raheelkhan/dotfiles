@@ -2,7 +2,16 @@
   "enabledPlugins": {
     "typescript-lsp@claude-plugins-official": true,
     "pyright-lsp@claude-plugins-official": true,
-    "ruby-lsp@claude-plugins-official": true
+    "ruby-lsp@claude-plugins-official": true,
+    "gopls-lsp@claude-plugins-official": true
+  },
+  "extraKnownMarketplaces": {
+    "zarpay-nexus": {
+      "source": {
+        "source": "github",
+        "repo": "zarpay/nexus"
+      }
+    }
   },
   "skipDangerousModePermissionPrompt": true,
   "terminalConfig": {
