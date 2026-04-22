@@ -1,4 +1,17 @@
 {
+  "permissions": {
+    "deny": [
+      "Read(//Users/raheel/.zshrc.local)",
+      "Read(**/.zshrc.local)",
+      "Bash(cat *.zshrc.local*)",
+      "Bash(cat *~/.zshrc.local*)",
+      "Bash(less *.zshrc.local*)",
+      "Bash(head *.zshrc.local*)",
+      "Bash(tail *.zshrc.local*)",
+      "Bash(env)",
+      "Bash(printenv*)"
+    ]
+  },
   "enabledPlugins": {
     "typescript-lsp@claude-plugins-official": true,
     "pyright-lsp@claude-plugins-official": true,

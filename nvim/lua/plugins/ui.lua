@@ -1,5 +1,5 @@
 return {
-  -- Snacks: floating terminal (default changed to bottom in newer versions)
+  -- Snacks: floating terminal + show hidden dotfiles in picker
   {
     "folke/snacks.nvim",
     opts = {
@@ -7,6 +7,11 @@ return {
         win = {
           position = "float",
           border = "rounded",
+        },
+      },
+      picker = {
+        sources = {
+          files = { hidden = true },
         },
       },
     },

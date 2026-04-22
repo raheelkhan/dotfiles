@@ -226,6 +226,18 @@ create_symlink "$SCRIPT_DIR/claude/settings.json" "$HOME/.claude/settings.json" 
 echo ""
 
 # ------------------------------------------------------------------------------
+# Ad-hoc sign tree-sitter parsers (macOS 26.2+ kills unsigned dylibs on load)
+# ------------------------------------------------------------------------------
+if [ "$(uname -s)" = "Darwin" ]; then
+    parser_dir="$HOME/.local/share/nvim/site/parser"
+    if [ -d "$parser_dir" ] && ls "$parser_dir"/*.so >/dev/null 2>&1; then
+        echo -n "[nvim parsers] Ad-hoc signing... "
+        find "$parser_dir" -name "*.so" -exec codesign --force --sign - {} \; >/dev/null 2>&1
+        echo "OK"
+    fi
+fi
+
+# ------------------------------------------------------------------------------
 # Done
 # ------------------------------------------------------------------------------
 if [ -d "$BACKUP_DIR" ]; then
@@ -239,4 +251,7 @@ echo "Next steps:"
 echo "  1. Restart your terminal: source ~/.zshrc"
 echo "  2. Open nvim (plugins auto-install): nvim"
 echo "  3. LSP servers auto-install via Mason on first use"
+echo ""
+echo "Note: after installing new tree-sitter parsers on macOS 26.2+,"
+echo "re-run this script (or codesign -f -s - ~/.local/share/nvim/site/parser/*.so)"
 echo ""

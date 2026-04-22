@@ -4,3 +4,10 @@
 # Backups
 *.bak
 *~
+
+# Editor swap files
+*.swp
+*.swo
+
+# Tmux plugins (installed by TPM at runtime)
+tmux/plugins/
