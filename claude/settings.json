@@ -1,7 +1,6 @@
 {
   "permissions": {
     "deny": [
-      "Read(//Users/raheel/.zshrc.local)",
       "Read(**/.zshrc.local)",
       "Bash(cat *.zshrc.local*)",
       "Bash(cat *~/.zshrc.local*)",
@@ -18,15 +17,6 @@
     "ruby-lsp@claude-plugins-official": true,
     "gopls-lsp@claude-plugins-official": true
   },
-  "extraKnownMarketplaces": {
-    "zarpay-nexus": {
-      "source": {
-        "source": "github",
-        "repo": "zarpay/nexus"
-      }
-    }
-  },
-  "skipDangerousModePermissionPrompt": true,
   "terminalConfig": {
     "vimMode": false
   }

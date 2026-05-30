@@ -28,7 +28,7 @@ Fully reproducible development environment setup. Clone repo + run `./setup.sh` 
 
 ### Starting a Dev Session
 ```bash
-dev <project>    # e.g. dev nexus, dev dotfiles
+dev <project>    # e.g. dev dotfiles
 ```
 This creates a tmux session with:
 - Window "editor": `nvim .` (auto-opens)

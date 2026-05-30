@@ -140,6 +140,25 @@ else
     echo "DONE"
 fi
 
+# Ruby LSP gem (Neovim uses the rbenv shim directly, not Mason — see docs/ruby-lsp-rbenv.md)
+if check_command rbenv; then
+    if rbenv version-name >/dev/null 2>&1 && [ "$(rbenv version-name)" != "system" ]; then
+        if rbenv which ruby-lsp >/dev/null 2>&1; then
+            echo "[ruby-lsp gem] OK"
+        else
+            echo -n "[ruby-lsp gem] Installing for Ruby $(rbenv version-name)... "
+            if gem install ruby-lsp >/dev/null 2>&1; then
+                rbenv rehash
+                echo "DONE"
+            else
+                echo "SKIP (install manually: gem install ruby-lsp)"
+            fi
+        fi
+    else
+        echo "[ruby-lsp gem] SKIP (no rbenv Ruby active; run 'rbenv install <version>' then 'gem install ruby-lsp')"
+    fi
+fi
+
 # Go
 if check_command go; then
     echo "[go] OK"

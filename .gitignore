@@ -9,5 +9,8 @@
 *.swp
 *.swo
 
+# Local Claude Code overrides (machine-specific, may contain private settings)
+.claude/settings.local.json
+
 # Tmux plugins (installed by TPM at runtime)
 tmux/plugins/

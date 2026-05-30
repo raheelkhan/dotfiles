@@ -4,7 +4,12 @@
 export PATH="$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH"
 export PATH="$HOME/.gem:$PATH"
 export PATH="$HOME/go/bin:$PATH"
-export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
+
+# Homebrew prefix differs by arch: /opt/homebrew (Apple Silicon), /usr/local (Intel)
+if command -v brew &>/dev/null; then
+  BREW_PREFIX="$(brew --prefix)"
+  export PATH="$BREW_PREFIX/opt/libpq/bin:$PATH"
+fi
 
 # ==============================================================================
 # OH MY ZSH
@@ -19,8 +24,12 @@ source "$ZSH/oh-my-zsh.sh"
 # ==============================================================================
 # SHELL ENHANCEMENTS
 # ==============================================================================
-source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+if [ -n "$BREW_PREFIX" ]; then
+  [ -f "$BREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ] && \
+    source "$BREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+  [ -f "$BREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ] && \
+    source "$BREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+fi
 
 # ==============================================================================
 # VERSION MANAGERS
@@ -52,8 +61,10 @@ load-nvmrc  # Run on shell start
 
 # Ruby (rbenv) with auto-switch on .ruby-version
 export PATH="$HOME/.rbenv/bin:$PATH"
-eval "$(rbenv init -)"
 # rbenv auto-switches via .ruby-version by default
+if command -v rbenv &>/dev/null; then
+  eval "$(rbenv init -)"
+fi
 
 # ==============================================================================
 # TERMINAL TITLE
@@ -109,5 +120,6 @@ dev() {
 # ==============================================================================
 # ALIASES
 # ==============================================================================
-alias lia='cd /Users/raheel/Code/linkedin-agent && uv run lia'
+# Add your personal aliases here, e.g.:
+# alias gs='git status'
 
